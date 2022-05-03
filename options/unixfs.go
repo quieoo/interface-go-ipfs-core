@@ -36,6 +36,8 @@ type UnixfsAddSettings struct {
 	Events   chan<- interface{}
 	Silent   bool
 	Progress bool
+
+	ProvideThrough bool
 }
 
 type UnixfsLsSettings struct {
@@ -66,6 +68,8 @@ func UnixfsAddOptions(opts ...UnixfsAddOption) (*UnixfsAddSettings, cid.Prefix, 
 		Events:   nil,
 		Silent:   false,
 		Progress: false,
+
+		ProvideThrough: false,
 	}
 
 	for _, opt := range opts {
@@ -198,6 +202,13 @@ func (unixfsOpts) InlineLimit(limit int) UnixfsAddOption {
 func (unixfsOpts) Chunker(chunker string) UnixfsAddOption {
 	return func(settings *UnixfsAddSettings) error {
 		settings.Chunker = chunker
+		return nil
+	}
+}
+
+func (unixfsOpts) ProvideThrough() UnixfsAddOption {
+	return func(settings *UnixfsAddSettings) error {
+		settings.ProvideThrough = true
 		return nil
 	}
 }
